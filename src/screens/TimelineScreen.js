@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, TextInput, Alert, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, TextInput, Alert } from 'react-native';
 import { useState, useEffect } from 'react';
 import { collection, addDoc, onSnapshot, orderBy, query } from 'firebase/firestore';
 import { db, auth } from '../services/firebase';
@@ -61,7 +61,7 @@ export default function TimelineScreen() {
       <View style={styles.header}>
         <Text style={styles.title}>Timeline</Text>
         <TouchableOpacity style={styles.addBtn} onPress={() => setShowForm(!showForm)}>
-          <Text style={styles.addBtnText}>{showForm ? '✕' : '+ Post'}</Text>
+          <Text style={styles.addBtnText}>{showForm ? '✕ Close' : '+ Post'}</Text>
         </TouchableOpacity>
       </View>
 
@@ -70,14 +70,14 @@ export default function TimelineScreen() {
           <TextInput
             style={styles.input}
             placeholder="Place you visited"
-            placeholderTextColor="#555"
+            placeholderTextColor="#6B7280"
             value={placeName}
             onChangeText={setPlaceName}
           />
           <TextInput
             style={[styles.input, styles.textArea]}
             placeholder="Share your experience..."
-            placeholderTextColor="#555"
+            placeholderTextColor="#6B7280"
             value={note}
             onChangeText={setNote}
             multiline
@@ -95,6 +95,7 @@ export default function TimelineScreen() {
         contentContainerStyle={styles.list}
         ListEmptyComponent={
           <View style={styles.empty}>
+            <Text style={styles.emptyIcon}>🗺️</Text>
             <Text style={styles.emptyText}>No posts yet</Text>
             <Text style={styles.emptySub}>Be the first to share a place!</Text>
           </View>
@@ -105,25 +106,26 @@ export default function TimelineScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0a0a0a' },
+  container: { flex: 1, backgroundColor: '#0a0f1e' },
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 20, paddingTop: 60 },
-  title: { fontSize: 28, fontWeight: 'bold', color: '#00C896' },
-  addBtn: { backgroundColor: '#00C896', paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20 },
+  title: { fontSize: 28, fontWeight: 'bold', color: '#F9FAFB' },
+  addBtn: { backgroundColor: '#3B82F6', paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20 },
   addBtnText: { color: '#fff', fontWeight: 'bold' },
-  form: { padding: 16, backgroundColor: '#111', marginHorizontal: 16, borderRadius: 12, marginBottom: 16 },
-  input: { backgroundColor: '#1a1a1a', color: '#fff', padding: 12, borderRadius: 10, marginBottom: 10, fontSize: 14 },
+  form: { padding: 16, backgroundColor: '#111827', marginHorizontal: 16, borderRadius: 16, marginBottom: 16, borderWidth: 1, borderColor: '#1F2937' },
+  input: { backgroundColor: '#0a0f1e', color: '#F9FAFB', padding: 12, borderRadius: 10, marginBottom: 10, fontSize: 14, borderWidth: 1, borderColor: '#1F2937' },
   textArea: { height: 80, textAlignVertical: 'top' },
-  postBtn: { backgroundColor: '#00C896', padding: 14, borderRadius: 10, alignItems: 'center' },
+  postBtn: { backgroundColor: '#3B82F6', padding: 14, borderRadius: 10, alignItems: 'center' },
   postBtnText: { color: '#fff', fontWeight: 'bold' },
   list: { padding: 16 },
-  post: { backgroundColor: '#111', borderRadius: 12, padding: 16, marginBottom: 16, borderWidth: 1, borderColor: '#222' },
+  post: { backgroundColor: '#111827', borderRadius: 16, padding: 16, marginBottom: 16, borderWidth: 1, borderColor: '#1F2937' },
   postHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 12 },
-  avatar: { width: 40, height: 40, borderRadius: 20, backgroundColor: '#1a1a1a', justifyContent: 'center', alignItems: 'center', marginRight: 12 },
+  avatar: { width: 40, height: 40, borderRadius: 20, backgroundColor: '#1F2937', justifyContent: 'center', alignItems: 'center', marginRight: 12 },
   avatarText: { fontSize: 18 },
-  postPlace: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
-  postDate: { color: '#555', fontSize: 12, marginTop: 2 },
-  postNote: { color: '#aaa', fontSize: 14, lineHeight: 20 },
+  postPlace: { color: '#F9FAFB', fontWeight: 'bold', fontSize: 16 },
+  postDate: { color: '#6B7280', fontSize: 12, marginTop: 2 },
+  postNote: { color: '#9CA3AF', fontSize: 14, lineHeight: 20 },
   empty: { alignItems: 'center', marginTop: 60 },
-  emptyText: { color: '#fff', fontSize: 18, fontWeight: 'bold' },
-  emptySub: { color: '#555', marginTop: 8 }
+  emptyIcon: { fontSize: 48, marginBottom: 16 },
+  emptyText: { color: '#F9FAFB', fontSize: 18, fontWeight: 'bold' },
+  emptySub: { color: '#6B7280', marginTop: 8 }
 });

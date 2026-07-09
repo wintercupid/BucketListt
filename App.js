@@ -1,17 +1,17 @@
-import { registerRootComponent } from 'expo';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { useState, useEffect } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from './src/services/firebase';
-import LoginScreen from './src/screens/LoginScreen';
-import SignupScreen from './src/screens/SignupScreen';
-import MapScreen from './src/screens/MapScreen';
-import AddPlaceScreen from './src/screens/AddPlaceScreen';
-import TimelineScreen from './src/screens/TimelineScreen';
-import ProfileScreen from './src/screens/ProfileScreen';
-import SearchScreen from './src/screens/SearchScreen';
+import { registerRootComponent } from "expo";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { useState, useEffect } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "./src/services/firebase";
+import LoginScreen from "./src/screens/LoginScreen";
+import SignupScreen from "./src/screens/SignupScreen";
+import MapScreen from "./src/screens/MapScreen";
+import AddPlaceScreen from "./src/screens/AddPlaceScreen";
+import TimelineScreen from "./src/screens/TimelineScreen";
+import ProfileScreen from "./src/screens/ProfileScreen";
+import SearchScreen from "./src/screens/SearchScreen";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -22,21 +22,41 @@ function MainTabs() {
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: '#111',
-          borderTopColor: '#222',
+          backgroundColor: "#0a0f1e",
+          borderTopColor: "#1F2937",
           height: 60,
           paddingBottom: 8,
         },
-        tabBarActiveTintColor: '#00C896',
-        tabBarInactiveTintColor: '#555',
+        tabBarActiveTintColor: '#3B82F6',
+        tabBarInactiveTintColor: "#555",
         tabBarLabelStyle: { fontSize: 10 },
       }}
     >
-      <Tab.Screen name="Map" component={MapScreen} options={{ tabBarLabel: 'Map', tabBarIcon: () => null }} />
-      <Tab.Screen name="AddPlace" component={AddPlaceScreen} options={{ tabBarLabel: 'Add', tabBarIcon: () => null }} />
-      <Tab.Screen name="Timeline" component={TimelineScreen} options={{ tabBarLabel: 'Timeline', tabBarIcon: () => null }} />
-      <Tab.Screen name="Search" component={SearchScreen} options={{ tabBarLabel: 'Search', tabBarIcon: () => null }} />
-      <Tab.Screen name="Profile" component={ProfileScreen} options={{ tabBarLabel: 'Profile', tabBarIcon: () => null }} />
+      <Tab.Screen
+        name="Map"
+        component={MapScreen}
+        options={{ tabBarLabel: "Map", tabBarIcon: () => null }}
+      />
+      <Tab.Screen
+        name="AddPlace"
+        component={AddPlaceScreen}
+        options={{ tabBarLabel: "Add", tabBarIcon: () => null }}
+      />
+      <Tab.Screen
+        name="Timeline"
+        component={TimelineScreen}
+        options={{ tabBarLabel: "Timeline", tabBarIcon: () => null }}
+      />
+      <Tab.Screen
+        name="Search"
+        component={SearchScreen}
+        options={{ tabBarLabel: "Search", tabBarIcon: () => null }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{ tabBarLabel: "Profile", tabBarIcon: () => null }}
+      />
     </Tab.Navigator>
   );
 }

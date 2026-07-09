@@ -36,27 +36,59 @@ export default function SignupScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Create Account</Text>
-      <Text style={styles.subtitle}>Join the TravelVault community</Text>
-      <TextInput style={styles.input} placeholder="Username" placeholderTextColor="#999" value={username} onChangeText={setUsername} />
-      <TextInput style={styles.input} placeholder="Email" placeholderTextColor="#999" value={email} onChangeText={setEmail} />
-      <TextInput style={styles.input} placeholder="Password" placeholderTextColor="#999" secureTextEntry value={password} onChangeText={setPassword} />
-      <TouchableOpacity style={styles.button} onPress={handleSignup} disabled={loading}>
-        <Text style={styles.buttonText}>{loading ? 'Creating Account...' : 'Sign Up'}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-        <Text style={styles.link}>Already have an account? Log In</Text>
-      </TouchableOpacity>
+      <View style={styles.topSection}>
+        <Text style={styles.logo}>🗺️</Text>
+        <Text style={styles.title}>Create Account</Text>
+        <Text style={styles.subtitle}>Join the TravelVault community</Text>
+      </View>
+
+      <View style={styles.form}>
+        <TextInput
+          style={styles.input}
+          placeholder="Username"
+          placeholderTextColor="#6B7280"
+          value={username}
+          onChangeText={setUsername}
+          autoCapitalize="none"
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          placeholderTextColor="#6B7280"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          placeholderTextColor="#6B7280"
+          secureTextEntry
+          value={password}
+          onChangeText={setPassword}
+        />
+        <TouchableOpacity style={styles.button} onPress={handleSignup} disabled={loading}>
+          <Text style={styles.buttonText}>{loading ? 'Creating Account...' : 'Sign Up'}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+          <Text style={styles.link}>Already have an account? <Text style={styles.linkBold}>Log In</Text></Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0a0a0a', justifyContent: 'center', padding: 24 },
-  title: { fontSize: 32, fontWeight: 'bold', color: '#00C896', textAlign: 'center', marginBottom: 8 },
-  subtitle: { fontSize: 14, color: '#888', textAlign: 'center', marginBottom: 40 },
-  input: { backgroundColor: '#1a1a1a', color: '#fff', padding: 14, borderRadius: 10, marginBottom: 16, fontSize: 15 },
-  button: { backgroundColor: '#00C896', padding: 16, borderRadius: 10, alignItems: 'center', marginBottom: 16 },
+  container: { flex: 1, backgroundColor: '#0a0f1e', justifyContent: 'center', padding: 24 },
+  topSection: { alignItems: 'center', marginBottom: 48 },
+  logo: { fontSize: 64, marginBottom: 16 },
+  title: { fontSize: 32, fontWeight: 'bold', color: '#F9FAFB', marginBottom: 8 },
+  subtitle: { fontSize: 14, color: '#6B7280' },
+  form: { gap: 16 },
+  input: { backgroundColor: '#111827', color: '#F9FAFB', padding: 16, borderRadius: 12, fontSize: 15, borderWidth: 1, borderColor: '#1F2937' },
+  button: { backgroundColor: '#3B82F6', padding: 16, borderRadius: 12, alignItems: 'center' },
   buttonText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
-  link: { color: '#00C896', textAlign: 'center', fontSize: 14 }
+  link: { color: '#6B7280', textAlign: 'center', fontSize: 14 },
+  linkBold: { color: '#3B82F6', fontWeight: 'bold' }
 });

@@ -68,7 +68,7 @@ export default function SearchScreen() {
         style={[styles.followBtn, following[item.uid] && styles.followingBtn]}
         onPress={() => handleFollow(item)}
       >
-        <Text style={styles.followBtnText}>
+        <Text style={[styles.followBtnText, following[item.uid] && styles.followingBtnText]}>
           {following[item.uid] ? 'Following' : 'Follow'}
         </Text>
       </TouchableOpacity>
@@ -83,9 +83,10 @@ export default function SearchScreen() {
         <TextInput
           style={styles.input}
           placeholder="Search by username..."
-          placeholderTextColor="#555"
+          placeholderTextColor="#6B7280"
           value={searchText}
           onChangeText={setSearchText}
+          autoCapitalize="none"
         />
         <TouchableOpacity style={styles.searchBtn} onPress={handleSearch}>
           <Text style={styles.searchBtnText}>Search</Text>
@@ -93,7 +94,7 @@ export default function SearchScreen() {
       </View>
 
       {loading ? (
-        <ActivityIndicator color="#00C896" style={{ marginTop: 30 }} />
+        <ActivityIndicator color="#3B82F6" style={{ marginTop: 30 }} />
       ) : (
         <FlatList
           data={results}
@@ -101,7 +102,11 @@ export default function SearchScreen() {
           renderItem={renderUser}
           contentContainerStyle={styles.list}
           ListEmptyComponent={
-            <Text style={styles.emptyText}>Search for users to follow</Text>
+            <View style={styles.empty}>
+              <Text style={styles.emptyIcon}>🔍</Text>
+              <Text style={styles.emptyText}>Search for explorers</Text>
+              <Text style={styles.emptySub}>Find people to follow</Text>
+            </View>
           }
         />
       )}
@@ -110,21 +115,25 @@ export default function SearchScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0a0a0a', paddingTop: 60, padding: 20 },
-  title: { fontSize: 28, fontWeight: 'bold', color: '#00C896', marginBottom: 20 },
+  container: { flex: 1, backgroundColor: '#0a0f1e', paddingTop: 60, padding: 20 },
+  title: { fontSize: 28, fontWeight: 'bold', color: '#F9FAFB', marginBottom: 20 },
   searchRow: { flexDirection: 'row', gap: 10, marginBottom: 20 },
-  input: { flex: 1, backgroundColor: '#1a1a1a', color: '#fff', padding: 12, borderRadius: 10, fontSize: 14 },
-  searchBtn: { backgroundColor: '#00C896', padding: 12, borderRadius: 10, justifyContent: 'center' },
+  input: { flex: 1, backgroundColor: '#111827', color: '#F9FAFB', padding: 12, borderRadius: 12, fontSize: 14, borderWidth: 1, borderColor: '#1F2937' },
+  searchBtn: { backgroundColor: '#3B82F6', padding: 12, borderRadius: 12, justifyContent: 'center', paddingHorizontal: 20 },
   searchBtnText: { color: '#fff', fontWeight: 'bold' },
   list: { paddingBottom: 20 },
-  userCard: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#111', padding: 14, borderRadius: 12, marginBottom: 10, borderWidth: 1, borderColor: '#222' },
-  avatar: { width: 44, height: 44, borderRadius: 22, backgroundColor: '#00C896', justifyContent: 'center', alignItems: 'center', marginRight: 12 },
+  userCard: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#111827', padding: 14, borderRadius: 16, marginBottom: 10, borderWidth: 1, borderColor: '#1F2937' },
+  avatar: { width: 44, height: 44, borderRadius: 22, backgroundColor: '#3B82F6', justifyContent: 'center', alignItems: 'center', marginRight: 12 },
   avatarText: { color: '#fff', fontWeight: 'bold', fontSize: 18 },
   userInfo: { flex: 1 },
-  username: { color: '#fff', fontWeight: 'bold', fontSize: 15 },
-  email: { color: '#555', fontSize: 12, marginTop: 2 },
-  followBtn: { backgroundColor: '#00C896', paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20 },
-  followingBtn: { backgroundColor: '#1a1a1a', borderWidth: 1, borderColor: '#00C896' },
+  username: { color: '#F9FAFB', fontWeight: 'bold', fontSize: 15 },
+  email: { color: '#6B7280', fontSize: 12, marginTop: 2 },
+  followBtn: { backgroundColor: '#3B82F6', paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20 },
+  followingBtn: { backgroundColor: 'transparent', borderWidth: 1, borderColor: '#3B82F6' },
   followBtnText: { color: '#fff', fontWeight: 'bold', fontSize: 13 },
-  emptyText: { color: '#555', textAlign: 'center', marginTop: 40 }
+  followingBtnText: { color: '#3B82F6' },
+  empty: { alignItems: 'center', marginTop: 60 },
+  emptyIcon: { fontSize: 48, marginBottom: 16 },
+  emptyText: { color: '#F9FAFB', fontSize: 18, fontWeight: 'bold' },
+  emptySub: { color: '#6B7280', marginTop: 8 }
 });
