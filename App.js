@@ -11,6 +11,7 @@ import MapScreen from './src/screens/MapScreen';
 import AddPlaceScreen from './src/screens/AddPlaceScreen';
 import TimelineScreen from './src/screens/TimelineScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
+import SearchScreen from './src/screens/SearchScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -28,11 +29,13 @@ function MainTabs() {
         },
         tabBarActiveTintColor: '#00C896',
         tabBarInactiveTintColor: '#555',
+        tabBarLabelStyle: { fontSize: 10 },
       }}
     >
-      <Tab.Screen name="Map" component={MapScreen} options={{ tabBarLabel: 'Explore', tabBarIcon: () => null }} />
-      <Tab.Screen name="AddPlace" component={AddPlaceScreen} options={{ tabBarLabel: 'Add Place', tabBarIcon: () => null }} />
+      <Tab.Screen name="Map" component={MapScreen} options={{ tabBarLabel: 'Map', tabBarIcon: () => null }} />
+      <Tab.Screen name="AddPlace" component={AddPlaceScreen} options={{ tabBarLabel: 'Add', tabBarIcon: () => null }} />
       <Tab.Screen name="Timeline" component={TimelineScreen} options={{ tabBarLabel: 'Timeline', tabBarIcon: () => null }} />
+      <Tab.Screen name="Search" component={SearchScreen} options={{ tabBarLabel: 'Search', tabBarIcon: () => null }} />
       <Tab.Screen name="Profile" component={ProfileScreen} options={{ tabBarLabel: 'Profile', tabBarIcon: () => null }} />
     </Tab.Navigator>
   );
