@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, Image } from 'react-native';
 import { useState, useEffect } from 'react';
 import MapView, { PROVIDER_DEFAULT, UrlTile, Marker } from 'react-native-maps';
 import { collection, onSnapshot, doc, setDoc, deleteDoc, getDoc } from 'firebase/firestore';
@@ -90,7 +90,7 @@ export default function MapScreen() {
           <Marker
             key={place.id}
             coordinate={{ latitude: place.latitude, longitude: place.longitude }}
-            pinColor="#00C896"
+            pinColor="#3B82F6"
             onPress={() => handleSelectPlace(place)}
           />
         ))}
@@ -106,6 +106,12 @@ export default function MapScreen() {
           <TouchableOpacity style={styles.closeBtn} onPress={() => setSelected(null)}>
             <Text style={styles.closeText}>✕</Text>
           </TouchableOpacity>
+          {selected.photoURL && (
+            <Image
+              source={{ uri: selected.photoURL }}
+              style={styles.cardImage}
+            />
+          )}
           <Text style={styles.cardCategory}>{selected.category}</Text>
           <Text style={styles.cardName}>{selected.name}</Text>
           <Text style={styles.cardDesc}>{selected.description}</Text>
@@ -136,30 +142,31 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 50,
     left: 16,
-    backgroundColor: 'rgba(0,0,0,0.75)',
+    backgroundColor: 'rgba(10,15,30,0.85)',
     padding: 12,
     borderRadius: 12,
   },
-  headerText: { color: '#00C896', fontWeight: 'bold', fontSize: 16 },
-  headerSub: { color: '#888', fontSize: 12, marginTop: 2 },
+  headerText: { color: '#3B82F6', fontWeight: 'bold', fontSize: 16 },
+  headerSub: { color: '#6B7280', fontSize: 12, marginTop: 2 },
   card: {
     position: 'absolute',
     bottom: 20,
     left: 16,
     right: 16,
-    backgroundColor: '#1a1a1a',
+    backgroundColor: '#111827',
     borderRadius: 16,
     padding: 20,
     borderWidth: 1,
-    borderColor: '#333',
+    borderColor: '#1F2937',
   },
-  closeBtn: { position: 'absolute', top: 12, right: 12 },
-  closeText: { color: '#888', fontSize: 18 },
-  cardCategory: { color: '#00C896', fontSize: 12, fontWeight: 'bold', marginBottom: 4 },
-  cardName: { color: '#fff', fontSize: 20, fontWeight: 'bold', marginBottom: 8 },
-  cardDesc: { color: '#aaa', fontSize: 14, lineHeight: 20, marginBottom: 16 },
+  closeBtn: { position: 'absolute', top: 12, right: 12, zIndex: 1 },
+  closeText: { color: '#6B7280', fontSize: 18 },
+  cardImage: { width: '100%', height: 150, borderRadius: 10, marginBottom: 12 },
+  cardCategory: { color: '#3B82F6', fontSize: 12, fontWeight: 'bold', marginBottom: 4 },
+  cardName: { color: '#F9FAFB', fontSize: 20, fontWeight: 'bold', marginBottom: 8 },
+  cardDesc: { color: '#9CA3AF', fontSize: 14, lineHeight: 20, marginBottom: 16 },
   actions: { flexDirection: 'row', gap: 10 },
-  actionBtn: { flex: 1, backgroundColor: '#111', padding: 10, borderRadius: 10, alignItems: 'center', borderWidth: 1, borderColor: '#333' },
-  actionBtnActive: { borderColor: '#00C896', backgroundColor: '#0a2e24' },
+  actionBtn: { flex: 1, backgroundColor: '#1F2937', padding: 10, borderRadius: 10, alignItems: 'center', borderWidth: 1, borderColor: '#374151' },
+  actionBtnActive: { borderColor: '#3B82F6', backgroundColor: '#1e3a5f' },
   actionText: { color: '#fff', fontSize: 13, fontWeight: 'bold' },
 });
