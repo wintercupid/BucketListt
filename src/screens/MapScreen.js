@@ -1,14 +1,17 @@
-import { View, StyleSheet, Text, TouchableOpacity, Image } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { useState, useEffect } from 'react';
 import MapView, { PROVIDER_DEFAULT, UrlTile, Marker } from 'react-native-maps';
 import { collection, onSnapshot, doc, setDoc, deleteDoc, getDoc } from 'firebase/firestore';
 import { db, auth } from '../services/firebase';
+
+const CATEGORIES = ['All', 'Beach', 'Library', 'Art Gallery', 'Resort', 'Restaurant', 'Park', 'Museum', 'Other'];
 
 export default function MapScreen() {
   const [places, setPlaces] = useState([]);
   const [selected, setSelected] = useState(null);
   const [saved, setSaved] = useState(false);
   const [visited, setVisited] = useState(false);
+  const [activeCategory, setActiveCategory] = useState('All');
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, 'places'), (snapshot) => {
@@ -17,6 +20,10 @@ export default function MapScreen() {
     });
     return unsubscribe;
   }, []);
+
+  const filteredPlaces = activeCategory === 'All'
+    ? places
+    : places.filter(p => p.category === activeCategory);
 
   const checkSavedVisited = async (place) => {
     const uid = auth.currentUser.uid;
@@ -86,7 +93,7 @@ export default function MapScreen() {
           maximumZ={19}
           flipY={false}
         />
-        {places.map((place) => (
+        {filteredPlaces.map((place) => (
           <Marker
             key={place.id}
             coordinate={{ latitude: place.latitude, longitude: place.longitude }}
@@ -98,7 +105,26 @@ export default function MapScreen() {
 
       <View style={styles.header}>
         <Text style={styles.headerText}>TravelVault 🗺️</Text>
-        <Text style={styles.headerSub}>{places.length} places in Greater Accra</Text>
+        <Text style={styles.headerSub}>{filteredPlaces.length} places in Greater Accra</Text>
+      </View>
+
+      <View style={styles.filterContainer}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterScroll}>
+          {CATEGORIES.map((cat) => (
+            <TouchableOpacity
+              key={cat}
+              style={[styles.filterBtn, activeCategory === cat && styles.filterBtnActive]}
+              onPress={() => {
+                setActiveCategory(cat);
+                setSelected(null);
+              }}
+            >
+              <Text style={[styles.filterText, activeCategory === cat && styles.filterTextActive]}>
+                {cat}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
       </View>
 
       {selected && (
@@ -148,6 +174,30 @@ const styles = StyleSheet.create({
   },
   headerText: { color: '#3B82F6', fontWeight: 'bold', fontSize: 16 },
   headerSub: { color: '#6B7280', fontSize: 12, marginTop: 2 },
+  filterContainer: {
+    position: 'absolute',
+    top: 120,
+    left: 0,
+    right: 0,
+  },
+  filterScroll: {
+    paddingHorizontal: 16,
+    gap: 8,
+  },
+  filterBtn: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    backgroundColor: 'rgba(10,15,30,0.85)',
+    borderWidth: 1,
+    borderColor: '#1F2937',
+  },
+  filterBtnActive: {
+    backgroundColor: '#3B82F6',
+    borderColor: '#3B82F6',
+  },
+  filterText: { color: '#9CA3AF', fontSize: 13, fontWeight: '600' },
+  filterTextActive: { color: '#fff' },
   card: {
     position: 'absolute',
     bottom: 20,
