@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, FlatList } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, FlatList, Image } from 'react-native';
 import { useState, useEffect } from 'react';
 import { signOut } from 'firebase/auth';
 import { doc, getDoc, collection, query, where, onSnapshot } from 'firebase/firestore';
@@ -55,11 +55,18 @@ export default function ProfileScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <View style={styles.avatar}>
-          <Text style={styles.avatarText}>
-            {profile?.username?.charAt(0).toUpperCase() || '?'}
-          </Text>
-        </View>
+        {profile?.photoURL ? (
+          <Image
+            source={{ uri: profile.photoURL }}
+            style={styles.avatarImage}
+          />
+        ) : (
+          <View style={styles.avatar}>
+            <Text style={styles.avatarText}>
+              {profile?.username?.charAt(0).toUpperCase() || '?'}
+            </Text>
+          </View>
+        )}
         <Text style={styles.username}>{profile?.username || 'Explorer'}</Text>
         <Text style={styles.email}>{profile?.email}</Text>
       </View>
@@ -120,6 +127,7 @@ const styles = StyleSheet.create({
   centered: { flex: 1, backgroundColor: '#0a0f1e', justifyContent: 'center', alignItems: 'center' },
   header: { alignItems: 'center', paddingTop: 60, paddingBottom: 20 },
   avatar: { width: 80, height: 80, borderRadius: 40, backgroundColor: '#3B82F6', justifyContent: 'center', alignItems: 'center', marginBottom: 12 },
+  avatarImage: { width: 80, height: 80, borderRadius: 40, marginBottom: 12, borderWidth: 3, borderColor: '#3B82F6' },
   avatarText: { fontSize: 32, fontWeight: 'bold', color: '#fff' },
   username: { fontSize: 22, fontWeight: 'bold', color: '#F9FAFB', marginBottom: 4 },
   email: { fontSize: 13, color: '#6B7280' },

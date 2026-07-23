@@ -1,10 +1,9 @@
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView, Image, Platform } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView, Image } from 'react-native';
 import { useState } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import * as ImagePicker from 'expo-image-picker';
-import { auth, db, storage } from '../services/firebase';
+import { auth, db } from '../services/firebase';
 
 export default function SignupScreen({ navigation }) {
   const [step, setStep] = useState(1);
@@ -40,21 +39,19 @@ export default function SignupScreen({ navigation }) {
   };
 
   const pickImage = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== 'granted') {
-      Alert.alert('Permission needed', 'Please allow access to your photo library');
-      return;
-    }
+  try {
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [1, 1],
-      quality: 0.7,
+      quality: 0.5,
     });
     if (!result.canceled) {
       setProfileImage(result.assets[0].uri);
     }
-  };
+  } catch (error) {
+    Alert.alert('Error', error.message);
+  }
+};
 
   const takePhoto = async () => {
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
@@ -65,51 +62,47 @@ export default function SignupScreen({ navigation }) {
     const result = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
       aspect: [1, 1],
-      quality: 0.7,
+      quality: 0.5,
     });
     if (!result.canceled) {
       setProfileImage(result.assets[0].uri);
     }
   };
 
-  const uploadImage = async (uid) => {
-    if (!profileImage) return null;
-    try {
+  const handleSignup = async () => {
+  setLoading(true);
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+
+    let photoBase64 = null;
+    if (profileImage) {
       const response = await fetch(profileImage);
       const blob = await response.blob();
-      const imageRef = ref(storage, `profilePictures/${uid}`);
-      await uploadBytes(imageRef, blob);
-      const url = await getDownloadURL(imageRef);
-      return url;
-    } catch (error) {
-      console.log('Image upload error:', error);
-      return null;
-    }
-  };
-
-  const handleSignup = async () => {
-    setLoading(true);
-    try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-      const photoURL = await uploadImage(user.uid);
-      await setDoc(doc(db, 'users', user.uid), {
-        username,
-        email,
-        fullName,
-        dob,
-        sex,
-        photoURL: photoURL || null,
-        uid: user.uid,
-        createdAt: new Date().toISOString(),
-        followers: 0,
-        following: 0,
+      photoBase64 = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.readAsDataURL(blob);
       });
-    } catch (error) {
-      Alert.alert('Signup Error', error.message);
     }
-    setLoading(false);
-  };
+
+    await setDoc(doc(db, 'users', user.uid), {
+      username,
+      email,
+      fullName,
+      dob,
+      sex,
+      photoURL: photoBase64 || null,
+      uid: user.uid,
+      createdAt: new Date().toISOString(),
+      followers: 0,
+      following: 0,
+    });
+  } catch (error) {
+    Alert.alert('Signup Error', error.message);
+  }
+  setLoading(false);
+};
 
   if (step === 1) return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
@@ -185,8 +178,18 @@ export default function SignupScreen({ navigation }) {
         placeholder="DD/MM/YYYY"
         placeholderTextColor="#6B7280"
         value={dob}
-        onChangeText={setDob}
+        onChangeText={(text) => {
+          const cleaned = text.replace(/\D/g, '');
+          let formatted = cleaned;
+          if (cleaned.length >= 3 && cleaned.length <= 4) {
+            formatted = cleaned.slice(0, 2) + '/' + cleaned.slice(2);
+          } else if (cleaned.length > 4) {
+            formatted = cleaned.slice(0, 2) + '/' + cleaned.slice(2, 4) + '/' + cleaned.slice(4, 8);
+          }
+          setDob(formatted);
+        }}
         keyboardType="numeric"
+        maxLength={10}
       />
 
       <Text style={styles.label}>Sex</Text>
